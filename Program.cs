@@ -11,6 +11,26 @@ namespace BatalhaNaval
 
         static void Main(string[] args)
         {
+            string resposta;
+
+            do
+            {
+                ReiniciarJogo();
+                JogarBatalhaNaval();
+
+                Console.WriteLine("Deseja reiniciar o jogo? (sim/nao): ");
+                resposta = Console.ReadLine().ToLower();
+            } while (resposta == "sim");
+        }
+
+        static void ReiniciarJogo()
+        {
+            barcosJogador1 = 5;
+            barcosJogador2 = 5;
+        }
+
+        static void JogarBatalhaNaval()
+        {
             InicializarTabuleiros();
 
             while (barcosJogador1 > 0 && barcosJogador2 > 0)
@@ -68,9 +88,9 @@ namespace BatalhaNaval
 
             Random random = new Random();
 
+            int linha, coluna;
             for (int i = 0; i < 5; i++)
             {
-                int linha, coluna;
                 do
                 {
                     linha = random.Next(10);
@@ -91,7 +111,9 @@ namespace BatalhaNaval
 
         static void ExibirTabuleiro(char[,] tabuleiro)
         {
+            Console.WriteLine("Se quiser verificar os tabuleiros, digite: mostrar");
             Console.WriteLine("  0 1 2 3 4 5 6 7 8 9");
+
             for (int i = 0; i < 10; i++)
             {
                 Console.Write(i + " ");
@@ -119,7 +141,22 @@ namespace BatalhaNaval
             {
                 try
                 {
-                    string[] jogada = Console.ReadLine().Split(' ');
+                    var stringIn = Console.ReadLine();
+                    if (stringIn.ToLower() == "mostrar")
+                    {
+                        MostrarTabuleiros();
+                        if (tabuleiroAdversario == tabuleiroJogador2)
+                            barcosJogador2 = -1;
+                        else
+                            barcosJogador1 = -1;
+                        Console.WriteLine("Obrigado por jogar!");
+                        linha = 0;
+                        coluna = 0;
+                        Thread.Sleep(1000);
+                        return;
+                    }
+
+                    string[] jogada = stringIn.Split(' ');
                     linha = int.Parse(jogada[0]);
                     coluna = int.Parse(jogada[1]);
                 }
@@ -158,6 +195,30 @@ namespace BatalhaNaval
                     }
                 }
             } while (linha < 0 || linha > 9 || coluna < 0 || coluna > 9);
+        }
+
+        static void MostrarTabuleiros()
+        {
+            // Agora, vamos imprimir os tabuleiros
+            Console.WriteLine("Tabuleiro do Jogador 1:");
+            for (int i = 0; i < 10; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    Console.Write(tabuleiroJogador1[i, j] + " ");
+                }
+                Console.WriteLine(); // Quebra de linha entre as linhas do tabuleiro.
+            }
+
+            Console.WriteLine("Tabuleiro do Jogador 2:");
+            for (int i = 0; i < 10; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    Console.Write(tabuleiroJogador2[i, j] + " ");
+                }
+                Console.WriteLine(); // Quebra de linha entre as linhas do tabuleiro.
+            }
         }
     }
 }
